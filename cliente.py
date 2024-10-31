@@ -41,12 +41,21 @@ class Cliente:
 
     def escribirMensaje(self):
         while True:
-            mensaje = f"{self.nickname}: {input('')}"
-            try:
+            mensaje = input('')
+
+            if mensaje == "/listar":
                 self.cliente.send(mensaje.encode("utf-8"))
-            except:
-                print("\033[91m[CLIENTE]: Error al enviar el mensaje.\033[0m")
+            elif mensaje == "/desconectar":
+                self.cliente.send(mensaje.encode("utf-8"))
+                print("\033[91m[CLIENTE]: Desconectando a todos los usuarios.\033[0m")
                 break
+            elif mensaje == "/salir":
+                self.cliente.send(mensaje.encode("utf-8"))
+                print("\033[91m[CLIENTE]: Desconectándote del servidor.\033[0m")
+                break
+            else:
+                mensajeFormateado = f"{self.nickname}: {mensaje}"
+                self.cliente.send(mensajeFormateado.encode("utf-8"))
 
 if __name__ == "__main__":
     cliente = Cliente()

@@ -42,11 +42,33 @@ class Servidor:
     def manejarMensaje(self, cliente):
         while True:
             try:
-                message = cliente.recv(self.BUFFER_SIZE)
-                self.transmitirMensaje(message, cliente)
+                mensaje = cliente.recv(self.BUFFER_SIZE)
+                
+                if mensaje.decode("utf-8") == "/listar":
+                    self.listarUsuariosConectados(cliente)
+                elif mensaje.decode("utf-8") == "/desconectar":
+                    self.desconectarClientes()
+                    break
+                elif mensaje.decode("utf-8") == "/salir":
+                    self.desconectarCliente(cliente)
+                else:
+                    self.transmitirMensaje(mensaje, cliente)
             except:
                 self.desconectarCliente(cliente)
                 break
+
+    def listarUsuariosConectados(self, cliente):
+        listaUsuariosConectados = f"\033[94m[SERVIDOR] - Usuarios Conectados:\n" + "\n".join(self.nicknames) + "\033[0m"
+        cliente.send(listaUsuariosConectados.encode("utf-8"))
+
+    def desconectarClientes(self):
+        clientesConectados = self.clientes[:]
+
+        for cliente in clientesConectados:
+            cliente.send("Desconectando a todos los usuarios...".encode("utf-8"))
+            self.desconectarCliente(cliente)
+        self.clientes = []
+        self.nicknames = []
 
     def desconectarCliente(self, cliente):
         if cliente in self.clientes:
