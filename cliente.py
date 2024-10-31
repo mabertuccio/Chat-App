@@ -2,7 +2,7 @@ import socket
 import threading
 
 class Cliente:
-    
+
     def __init__(self, host = "127.0.0.1", port = 5000):
         self.host = host
         self.port = port
@@ -19,7 +19,7 @@ class Cliente:
         except:
             print("\033[91m[CLIENTE]: Error al conectar al servidor.\033[0m")
 
-    def iniciar_hilos(self):
+    def iniciarHilos(self):
         recibirThread = threading.Thread(target=self.recibirMensaje)
         recibirThread.start()
 
