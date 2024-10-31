@@ -15,7 +15,7 @@ class Cliente:
         try:
             self.cliente.connect((self.host, self.port))
             print("\033[92m[CLIENTE]: Conectado al servidor.\033[0m")
-            self.iniciar_hilos()
+            self.iniciarHilos()
         except:
             print("\033[91m[CLIENTE]: Error al conectar al servidor.\033[0m")
 
