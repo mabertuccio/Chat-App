@@ -62,15 +62,17 @@ class Servidor: # Crea la clase servidor
     def manejarMensaje(self, cliente):
         while True:
             try:
-                mensaje = cliente.recv(self.BUFFER_SIZE) # Recibe un mensaje del cliente
+                mensaje = cliente.recv(self.BUFFER_SIZE).decode("utf-8") # Recibe un mensaje del cliente y lo decodifica
                 
                 # Comprobaciones para comandos especiales
-                if mensaje.decode("utf-8") == "/listar":
+                if mensaje == "/listar":
                     self.listarUsuariosConectados(cliente) # Lista los usuarios conectados
-                elif mensaje.decode("utf-8") == "/desconectar":
+                elif mensaje == "/desconectar":
                     self.desconectarClientes() # Desconecta a todos los clientes
                     break
-                elif mensaje.decode("utf-8") == "/salir":
+                elif mensaje == "/perfil":
+                    self.obtenerPerfil(cliente) # Muesta la información del usuario
+                elif mensaje == "/salir":
                     self.desconectarCliente(cliente) # Desconecta al cliente actual
                 else:
                     self.transmitirMensaje(mensaje, cliente) # Transmite el mensaje a otros clientes
@@ -92,6 +94,21 @@ class Servidor: # Crea la clase servidor
             self.desconectarCliente(cliente) # Desconecta al cliente
         self.clientes = [] # Reinicia la lista de clientes
         self.nicknames = [] # Reinicia la lista de nicknames
+
+    # Método para obtener la información del usuario
+    def obtenerPerfil(self, cliente):
+        indice = self.clientes.index(cliente) # Obtener el índice del cliente en la lista de clientes
+        nickname = self.nicknames[indice] # Obtener el nickname del cliente usando el índice encontrado
+
+        cursor = self.db.cursor() # Crear un cursor para realizar consultas en la base de datos
+        cursor.execute("SELECT id, created_at, connected_at FROM usuarios WHERE nickname = %s", (nickname,)) # Ejecutar una consulta SQL para obtener el id, fecha de creación y última conexión del usuario
+        perfil = cursor.fetchone() # Obtener el primer resultado de la consulta
+        
+        # Si se encontró un perfil en la base de datos
+        if perfil:
+            idUsuario, createdAt, connectedAt = perfil # Asignar cada valor de la tupla a variables individuales
+            mensajePerfil = f" - ID: {idUsuario}\n - Fecha de Creación: {createdAt}\n - Última Conexión: {connectedAt}" # Formatear el mensaje de perfil con la información obtenida
+            cliente.send(mensajePerfil.encode("utf-8"))  # Enviar el mensaje formateado al cliente
 
     # Método para desconectar un cliente específico
     def desconectarCliente(self, cliente):
