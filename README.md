@@ -19,6 +19,14 @@ Consiste en un _Servidor_ y un _Cliente_ que se comunican a través de _Sockets_
 
 #### Instrucciones 📋
 
+**Ejecutar Script de SQL**:
+
+1. Abrí tu entorno MySQL.
+2. Copiá el contenido del archivo `db.sql` que se incluye en el repositorio.
+3. Ejecutá el script en el entorno de base de datos MySQL para crear la base de datos.
+
+Lo que sucederá, es que se creará la base de datos localmente en tu máquina para que puedas probar el programa.
+
 **Ejecutar el Servidor**:
 
 1. Abrí CMD.
