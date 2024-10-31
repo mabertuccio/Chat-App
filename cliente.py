@@ -61,6 +61,9 @@ class Cliente:
                 self.cliente.send(mensaje.encode("utf-8")) # Envía el comando de desconexión al servidor
                 print("\033[91m[CLIENTE]: Desconectando a todos los usuarios.\033[0m") # Mensaje de desconexión
                 break # Sale del bucle infinito del envío
+            #
+            elif mensaje == "/perfil":
+                self.cliente.send(mensaje.encode("utf-8"))  # Envía el comando de perfil al servidor
             # Si el usuario escribe el comando para salir
             elif mensaje == "/salir":
                 self.cliente.send(mensaje.encode("utf-8")) # Envía el comando de salida
