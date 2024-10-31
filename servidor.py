@@ -2,7 +2,7 @@ import socket
 import threading
 
 class Servidor:
-    
+
     def __init__(self, host = "127.0.0.1", port = 5000):
         self.host = host
         self.port = port
@@ -16,9 +16,28 @@ class Servidor:
         self.nicknames = []
 
     def transmitirMensaje(self, mensaje, _cliente):
-        for cliente in self.clientes:
-            if cliente != _cliente:
-                cliente.send(mensaje)
+        mensaje_decodificado = mensaje.decode("utf-8")
+        print(f"[DEBUG] Mensaje recibido: '{mensaje_decodificado}'")
+
+        if "@" in mensaje_decodificado:
+            partes = mensaje_decodificado.split()
+            nombreDestino = partes[1][1:]
+
+            if nombreDestino in self.nicknames:
+                indiceDestino = self.nicknames.index(nombreDestino)
+                clienteDestino = self.clientes[indiceDestino]
+                
+                indiceRemitente = self.clientes.index(_cliente)
+                nombreRemitente = self.nicknames[indiceRemitente]
+                
+                mensajePrivado = f"{nombreRemitente} (Privado): {' '.join(partes[2:])}"
+                clienteDestino.send(mensajePrivado.encode("utf-8"))
+            else:
+                _cliente.send(f"\033[91m[SERVIDOR]: El usuario '{nombreDestino}' no existe.\033[0m".encode("utf-8"))
+        else:
+            for cliente in self.clientes:
+                if cliente != _cliente:
+                    cliente.send(mensaje)
 
     def manejarMensaje(self, cliente):
         while True:
