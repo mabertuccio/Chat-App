@@ -17,8 +17,7 @@ class Servidor:
 
     def transmitirMensaje(self, mensaje, _cliente):
         mensaje_decodificado = mensaje.decode("utf-8")
-        print(f"[DEBUG] Mensaje recibido: '{mensaje_decodificado}'")
-
+        
         if "@" in mensaje_decodificado:
             partes = mensaje_decodificado.split()
             nombreDestino = partes[1][1:]
