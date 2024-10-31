@@ -43,6 +43,7 @@ Se te pedirá que ingreses un 'Nickname'. Escribí el apodo que quieras utilizar
 
 - `/listar`: Muestra una lista de usuarios conectados.
 - `/desconectar`: Desonecta a todos los usuarios.
+- `/perfil`: Muestra la información del usuario.
 - `/salir`: Desconecta al cliente del servidor.
 
 ---
