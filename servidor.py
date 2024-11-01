@@ -62,21 +62,26 @@ class Servidor: # Crea la clase servidor
     def manejarMensaje(self, cliente):
         while True:
             try:
-                mensaje = cliente.recv(self.BUFFER_SIZE).decode("utf-8") # Recibe un mensaje del cliente y lo decodifica
-                
+                mensaje = cliente.recv(self.BUFFER_SIZE) # Recibe un mensaje del cliente (tipo bytes)
+                if not mensaje:
+                    break # Sale del bucle si el cliente se desconecta
+                    
+                mensajeDecodificado = mensaje.decode("utf-8") # Decodifica el mensaje aquí
+
                 # Comprobaciones para comandos especiales
-                if mensaje == "/listar":
+                if mensajeDecodificado == "/listar":
                     self.listarUsuariosConectados(cliente) # Lista los usuarios conectados
-                elif mensaje == "/desconectar":
+                elif mensajeDecodificado == "/desconectar":
                     self.desconectarClientes() # Desconecta a todos los clientes
                     break
-                elif mensaje == "/perfil":
-                    self.obtenerPerfil(cliente) # Muesta la información del usuario
-                elif mensaje == "/salir":
-                    self.desconectarCliente(cliente) # Desconecta al cliente actual
+                elif mensajeDecodificado == "/perfil":
+                    self.obtenerPerfil(cliente) # Muestra la información del usuario
+                elif mensajeDecodificado == "/salir":
+                    self.desconectarCliente(cliente)  # Desconecta al cliente actual
                 else:
                     self.transmitirMensaje(mensaje, cliente) # Transmite el mensaje a otros clientes
-            except:
+            except Exception as e:
+                print(f"\033[91m[ERROR]: Ocurrió un error: {e}\033[0m") # Imprime el error
                 self.desconectarCliente(cliente) # Desconecta al cliente en caso de error
                 break
 
